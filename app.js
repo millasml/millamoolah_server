@@ -5,11 +5,18 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require("cors");
 
+var admin = require("firebase-admin");
+var serviceAccount = require("./config/millamoolah-firebase-adminsdk-drw7o-4225396d79.json");
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://millamoolah.firebaseio.com"
+});
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var testAPIRouter = require("./routes/testAPI");
 var testDBRouter = require("./routes/testDB");
-var testDataRouter = require("./routes/testData")
+var testDataRouter = require("./routes/testData");
 
 var app = express();
 
@@ -23,12 +30,27 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(checkAuth)
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use("/testAPI", testAPIRouter);
 app.use("/testDB", testDBRouter);
 app.use("/testData", testDataRouter);
+
+function checkAuth(req, res, next) {
+  if (req.headers.authtoken) {
+    admin.auth().verifyIdToken(req.headers.authtoken)
+      .then(() => {
+        console.log("authorized")
+        next()
+      }).catch(() => {
+        res.status(403).send('Unauthorized')
+      });
+  } else {
+    res.status(403).send('Unauthorized')
+  }
+}
 
 
 // catch 404 and forward to error handler

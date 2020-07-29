@@ -23,7 +23,7 @@ client.connect(function (err, client) {
 
   const db = client.db(dbName);
   console.log("connected to db")
-  const col = db.collection("expense");
+  const col = db.collection("users");
   col.find({}).next(function (err, docs) {
     console.log(docs)
     message = docs;
