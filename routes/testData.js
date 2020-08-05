@@ -25,7 +25,7 @@ client.connect(function (err, client) {
   console.log("connected to db")
   const col = db.collection("users");
   col.find({}).next(function (err, docs) {
-    console.log(docs)
+    // console.log(docs)
     message = docs;
   });
 
