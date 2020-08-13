@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
     },
   ],
   monthly_overview: [
-    { date: Date, month_expense: Number, month_income: Number },
+    { date: String, month_expense: Number, month_income: Number },
   ],
 });
 const User = mongoose.model("User", userSchema);
@@ -37,7 +37,8 @@ const User = mongoose.model("User", userSchema);
 
 /* GET users listing. */
 router.get("/", function (req, res, next) {
-  User.findById("Darrel_Sipes99").then(ans => res.send(ans))
+  console.log(req)
+  User.findById(req.uid).then(ans => res.send(ans))
   // res.send("respond with a resource");
 });
 

@@ -8,8 +8,14 @@ var logger = require('morgan');
 var cors = require("cors");
 const mongoose = require("mongoose");
 
+var indexRouter = require('./routes/index');
+var userRouter = require('./routes/user');
+var spendingRouter = require('./routes/spending');
+var addSpendingRouter = require('./routes/add_spending');
 
-//firebase admin
+
+var app = express();
+
 var admin = require("firebase-admin");
 var serviceAccount = require("./config/millamoolah-firebase-adminsdk-drw7o-4225396d79.json");
 admin.initializeApp({
@@ -17,25 +23,16 @@ admin.initializeApp({
   databaseURL: "https://millamoolah.firebaseio.com"
 });
 
-//mongoose connection
 mongoose.connect(DATABASE_URL);
-// If there is a connection error send an error message
 mongoose.connection.on("error", error => {
     console.log("Database connection error:", error);
 });
-// If connected to MongoDB send a success message
 mongoose.connection.once("open", () => {
     console.log("Connected to Database!");
 });
 
 
-var indexRouter = require('./routes/index');
-var userRouter = require('./routes/user');
-var testAPIRouter = require("./routes/testAPI");
-var testDBRouter = require("./routes/testDB");
-var testDataRouter = require("./routes/testData");
 
-var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -51,15 +48,18 @@ app.use(checkAuth)
 
 app.use('/', indexRouter);
 app.use('/user', userRouter);
-app.use("/testAPI", testAPIRouter);
-app.use("/testDB", testDBRouter);
-app.use("/testData", testDataRouter);
+app.use('/spending', spendingRouter);
+app.use('/add-spending', addSpendingRouter);
+
+
+
 
 function checkAuth(req, res, next) {
   if (req.headers.authorization) {
     admin.auth().verifyIdToken(req.headers.authorization.split(" ")[1])
-      .then(() => {
+      .then((claims) => {
         console.log("authorized")
+        req.uid = claims.uid
         next()
       }).catch(() => {
         res.status(403).send('Unauthorized')
