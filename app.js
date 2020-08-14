@@ -11,7 +11,7 @@ const mongoose = require("mongoose");
 var indexRouter = require('./routes/index');
 var userRouter = require('./routes/user');
 var spendingRouter = require('./routes/spending');
-var addSpendingRouter = require('./routes/add_spending');
+var savingsRouter = require('./routes/savings');
 
 
 var app = express();
@@ -49,7 +49,7 @@ app.use(checkAuth)
 app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/spending', spendingRouter);
-app.use('/add-spending', addSpendingRouter);
+app.use('/savings', savingsRouter);
 
 
 
