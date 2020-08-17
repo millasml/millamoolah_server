@@ -8,7 +8,7 @@ router.get("/", function (req, res, next) {
 });
 
 router.post("/", function (req, res, next) {
-    Savings.collection.insert(req.body, function (err, docs) {
+    Savings.insertMany(req.body, function (err, docs) {
     if (err) {
       res.status(403).send("Insert Unsuccessful");
     } else {
@@ -18,7 +18,6 @@ router.post("/", function (req, res, next) {
 });
 
 router.delete("/", function (req, res, next) {
-  console.log(req.body.transaction_id)
   Savings.deleteOne( {_id : req.body.transaction_id}, function (err) {
     if (err) {
       res.status(403).send("Delete Unsuccessful");

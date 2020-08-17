@@ -12,7 +12,8 @@ var indexRouter = require('./routes/index');
 var userRouter = require('./routes/user');
 var spendingRouter = require('./routes/spending');
 var savingsRouter = require('./routes/savings');
-
+var spendingRecurringRouter = require('./routes/spending_recurring');
+var savingsRecurringRouter = require('./routes/savings_recurring')
 
 var app = express();
 
@@ -49,7 +50,10 @@ app.use(checkAuth)
 app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/spending', spendingRouter);
+app.use('/spending/recurring', spendingRecurringRouter);
 app.use('/savings', savingsRouter);
+app.use('/savings/recurring', savingsRecurringRouter)
+
 
 
 
