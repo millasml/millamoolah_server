@@ -62,7 +62,7 @@ function checkAuth(req, res, next) {
   if (req.headers.authorization) {
     admin.auth().verifyIdToken(req.headers.authorization.split(" ")[1])
       .then((claims) => {
-        console.log("authorized")
+        console.log("authorized", claims.uid)
         req.uid = claims.uid
         next()
       }).catch(() => {
